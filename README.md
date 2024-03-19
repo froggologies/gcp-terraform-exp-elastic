@@ -16,7 +16,7 @@ Local machine:
 ## Clone this repo
 
 ```
-git clone
+git clone https://github.com/froggologies/gcp-terraform-exp-elastic.git && cd gcp-terraform-exp-elastic
 ```
 
 ## Set environment variables:
@@ -27,15 +27,32 @@ export TF_VAR_billing_account=<BILLING_ACCOUNT_ID>
 export TF_VAR_folder_id=<FOLDER_ID>
 ```
 
+## Provision resources
+
+Change your backend in `terraform/backend.tf` to your backend configuration or delete it if you want to use local backend.
+
+Initialize Terraform:
+```sh
+terraform -chdir=terraform init
 ```
+
+Apply Terraform:
+```sh
+terraform -chdir=terraform apply
+# Apply complete! Resources: 18 added, 0 changed, 0 destroyed.
+```
+
+Get cluster credentials:
+```sh
 gcloud container clusters get-credentials <cluster-name> --zone <zone-location> --project <project-id>
 ```
 
-```
+## Elasticsearch
+```sh
 helm repo add elastic https://helm.elastic.co
 ```
 
-```
+```sh
 curl -O https://raw.githubusercontent.com/elastic/helm-charts/master/elasticsearch/examples/minikube/values.yaml
 ```
 
