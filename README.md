@@ -102,6 +102,14 @@ NOTES:
 3. Retrieve the kibana service account token.
   $ kubectl get secrets --namespace=default kibana-kibana-es-token -ojsonpath='{.data.token}' | base64 -d
 ```
+```
+NAME                            READY   STATUS    RESTARTS   AGE
+kibana-kibana-b46d9c6df-9f5rl   1/1     Running   0          71s
+```
+```
+kubectl get secrets --namespace=default elasticsearch-master-credentials -ojsonpath='{.data.password}' | base64 -d
+```
 ```sh
 kubectl port-forward deployment/kibana-kibana 5601
 ```
+![login](./img/SCR-20240320-kzvb.png)
