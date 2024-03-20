@@ -106,10 +106,14 @@ NOTES:
 NAME                            READY   STATUS    RESTARTS   AGE
 kibana-kibana-b46d9c6df-9f5rl   1/1     Running   0          71s
 ```
-```
-kubectl get secrets --namespace=default elasticsearch-master-credentials -ojsonpath='{.data.password}' | base64 -d
-```
 ```sh
 kubectl port-forward deployment/kibana-kibana 5601
 ```
+username: elastic
+
+password:
+```
+kubectl get secrets --namespace=default elasticsearch-master-credentials -ojsonpath='{.data.password}' | base64 -d
+```
 ![login](./img/SCR-20240320-kzvb.png)
+![home](./img/SCR-20240320-ldgy.png)
