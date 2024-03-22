@@ -21,12 +21,17 @@ resource "google_container_node_pool" "node-pool-1" {
   node_count = 1
 
   node_config {
-    preemptible  = true
+    disk_size_gb = 30
     machine_type = "e2-standard-2"
 
     service_account = google_service_account.gke-1.email
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
+  }
+
+  provisioner "local-exec" {
+    command    = "gcloud container clusters get-credentials ${google_container_cluster.cluster-1.name} --zone ${google_container_cluster.cluster-1.location} --project ${self.project}"
+    on_failure = continue
   }
 }

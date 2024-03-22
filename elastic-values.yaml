@@ -21,3 +21,9 @@ volumeClaimTemplate:
   resources:
     requests:
       storage: 100M
+
+replicas: 1
+minimumMasterNodes: 1
+
+service:
+  type: LoadBalancer
