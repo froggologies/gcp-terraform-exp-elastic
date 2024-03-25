@@ -113,3 +113,12 @@ kubectl get secret elasticsearch-es-elastic-user -o=jsonpath='{.data.elastic}' -
 
 ![login](./img/SCR-20240320-kzvb.png)
 ![home](./img/SCR-20240320-ldgy.png)
+
+# Fluent-bit
+
+```sh
+helm repo add fluent https://fluent.github.io/helm-charts
+```
+```sh
+helm upgrade --install fluent-bit fluent/fluent-bit -n efk
+```
