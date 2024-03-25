@@ -15,7 +15,7 @@ Local machine:
 
 ## Clone this repo
 
-```
+```sh
 git clone https://github.com/froggologies/gcp-terraform-exp-elastic.git && cd gcp-terraform-exp-elastic
 ```
 
@@ -42,78 +42,74 @@ terraform -chdir=terraform apply
 # Apply complete! Resources: 18 added, 0 changed, 0 destroyed.
 ```
 
-Get cluster credentials:
+Make sure use that we use the correct context
+```sh
+kubectl config get-contexts
+```
+
+If not then get the cluster credentials:
 ```sh
 gcloud container clusters get-credentials <cluster-name> --zone <zone-location> --project <project-id>
 ```
 
+Create a new namespace
+```sh
+kubectl apply -f efk-namespace.yaml
+```
+
+## Elastic Cloud on Kubernetes
+
+Install custom resource definitions:
+```sh
+kubectl create -f https://download.elastic.co/downloads/eck/2.11.1/crds.yaml
+```
+
+Install the operator with its RBAC rules:
+```sh
+kubectl apply -f https://download.elastic.co/downloads/eck/2.11.1/operator.yaml
+```
+
+Create an efk namespace:
+```sh
+kubectl apply -f efk-namespace.yaml
+```
+
 ## Elasticsearch
 ```sh
-helm repo add elastic https://helm.elastic.co
+kubectl apply -f ElasticSearch.yaml
 ```
-
 ```sh
-curl -O https://raw.githubusercontent.com/elastic/helm-charts/master/elasticsearch/examples/minikube/values.yaml
+kubectl get elasticsearch -n efk
 ```
-
-```sh
-helm install elasticsearch elastic/elasticsearch -f ./values.yaml
 ```
-
-```
-NAME: elasticsearch
-LAST DEPLOYED: Tue Mar 19 12:03:28 2024
-NAMESPACE: default
-STATUS: deployed
-REVISION: 1
-NOTES:
-1. Watch all cluster members come up.
-  $ kubectl get pods --namespace=default -l app=elasticsearch-master -w
-2. Retrieve elastic user's password.
-  $ kubectl get secrets --namespace=default elasticsearch-master-credentials -ojsonpath='{.data.password}' | base64 -d
-3. Test cluster health using Helm test.
-  $ helm --namespace=default test elasticsearch
-```
-
-```
-NAME                     READY   STATUS    RESTARTS   AGE
-elasticsearch-master-0   1/1     Running   0          5m35s
-elasticsearch-master-1   1/1     Running   0          5m35s
-elasticsearch-master-2   1/1     Running   0          5m35s
+NAME            HEALTH   NODES   VERSION   PHASE   AGE
+elasticsearch   green    1       8.12.2    Ready   2m6s
 ```
 
 ## Kibana
 
 ```sh
-helm install kibana elastic/kibana
-```
-```
-NAME: kibana
-LAST DEPLOYED: Tue Mar 19 12:16:47 2024
-NAMESPACE: default
-STATUS: deployed
-REVISION: 1
-TEST SUITE: None
-NOTES:
-1. Watch all containers come up.
-  $ kubectl get pods --namespace=default -l release=kibana -w
-2. Retrieve the elastic user's password.
-  $ kubectl get secrets --namespace=default elasticsearch-master-credentials -ojsonpath='{.data.password}' | base64 -d
-3. Retrieve the kibana service account token.
-  $ kubectl get secrets --namespace=default kibana-kibana-es-token -ojsonpath='{.data.token}' | base64 -d
-```
-```
-NAME                            READY   STATUS    RESTARTS   AGE
-kibana-kibana-b46d9c6df-9f5rl   1/1     Running   0          71s
+kubectl apply -f Kibana.yaml
 ```
 ```sh
-kubectl port-forward deployment/kibana-kibana 5601
+kubectl get kibana -n efk
 ```
+```
+NAME     HEALTH   NODES   VERSION   AGE
+kibana   green    1       8.12.2    11m
+```
+```sh
+kubectl get svc kibana-kb-http -n efk
+```
+
+https://EXTERNAL-IP:5601/
+
 username: elastic
 
 password:
+```sh
+kubectl get secret elasticsearch-es-elastic-user -o=jsonpath='{.data.elastic}' -n efk | base64 --decode; echo
 ```
-kubectl get secrets --namespace=default elasticsearch-master-credentials -ojsonpath='{.data.password}' | base64 -d
-```
+
 ![login](./img/SCR-20240320-kzvb.png)
 ![home](./img/SCR-20240320-ldgy.png)
