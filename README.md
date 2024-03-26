@@ -111,8 +111,13 @@ password:
 kubectl get secret elasticsearch-es-elastic-user -o=jsonpath='{.data.elastic}' -n efk | base64 --decode; echo
 ```
 
-![login](./img/SCR-20240320-kzvb.png)
-![home](./img/SCR-20240320-ldgy.png)
+<!-- ![login](./img/SCR-20240320-kzvb.png)
+![home](./img/SCR-20240320-ldgy.png) -->
+
+<div align="center">
+  <img src="img/SCR-20240320-kzvb.png" alt="login" width="45%">
+  <img src="img/SCR-20240320-ldgy.png" alt="home" width="45%" >
+</div>
 
 # Fluent-bit
 
