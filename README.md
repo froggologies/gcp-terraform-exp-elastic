@@ -80,7 +80,7 @@ kubectl apply -f efk-namespace.yaml
 ```
 - switch context to efk namespace
   ```sh
-  kubectl config set-context <context-name> --namespace=efk
+  kubectl config set-context --current --namespace=efk
   ```
 2. Apply Manifest for Elasticsearch
 ```sh
