@@ -78,7 +78,10 @@ we can find more information regarding ECK [elastic web](https://www.elastic.co/
 ```sh
 kubectl apply -f efk-namespace.yaml
 ```
-
+- switch context to efk namespace
+  ```sh
+  kubectl config set-context <context-name> --namespace=efk
+  ```
 2. Apply Manifest for Elasticsearch
 ```sh
 kubectl apply -f ElasticSearch.yaml
