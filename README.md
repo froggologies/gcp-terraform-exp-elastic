@@ -52,64 +52,118 @@ If not then get the cluster credentials:
 gcloud container clusters get-credentials <cluster-name> --zone <zone-location> --project <project-id>
 ```
 
-Create a new namespace
-```sh
-kubectl apply -f efk-namespace.yaml
-```
+
+
 
 ## Elastic Cloud on Kubernetes
 
-Install custom resource definitions:
+If you are using GKE, make sure your user has cluster-admin permissions.
+
+1. Install custom resource definitions:
 ```sh
 kubectl create -f https://download.elastic.co/downloads/eck/2.11.1/crds.yaml
 ```
 
-Install the operator with its RBAC rules:
+2. Install the operator with its RBAC rules:
 ```sh
 kubectl apply -f https://download.elastic.co/downloads/eck/2.11.1/operator.yaml
 ```
+we can find more information regarding ECK [elastic web](https://www.elastic.co/guide/en/cloud-on-k8s/master/k8s-deploy-eck.html) and [elastic github](https://github.com/elastic/cloud-on-k8s/tree/main)
 
-Create an efk namespace:
+
+
+## Install Elasticsearch
+
+1. Create an efk namespace:
 ```sh
 kubectl apply -f efk-namespace.yaml
 ```
 
-## Elasticsearch
+2. Apply Manifest for Elasticsearch
 ```sh
 kubectl apply -f ElasticSearch.yaml
 ```
+
+3. WATCH Status of Elasticsearch
 ```sh
-kubectl get elasticsearch -n efk
+watch "kubectl get elasticsearch -n efk"
 ```
+
 ```
 NAME            HEALTH   NODES   VERSION   PHASE   AGE
-elasticsearch   green    1       8.12.2    Ready   2m6s
+elasticsearch   green    1       8.13.0    Ready   2m6s
+```
+- exit using `ctrl+c`
+
+4. Validation 
+- Export password
+```sh
+PASSWORD=$(kubectl get secret elasticsearch-es-elastic-user -o go-template='{{.data.elastic | base64decode}}')
+``` 
+- From your local workstation, use the following command in a separate terminal
+```sh
+kubectl port-forward service/elasticsearch-es-http 9200
 ```
 
-## Kibana
+- Then request `localhost`:
+```sh
+curl -u "elastic:$PASSWORD" -k "https://localhost:9200"
+```
+- - - validated like this :tada:
+```
+  $ curl -u "elastic:$PASSWORD" -k "https://localhost:9200"
+{
+  "name" : "elasticsearch-es-default-0",
+  "cluster_name" : "quickstart",
+  "cluster_uuid" : "zliKMgaPRzCmy6N1bJc4jw",
+  "version" : {
+    "number" : "8.13.0",
+    "build_flavor" : "default",
+    "build_type" : "docker",
+    "build_hash" : "09df99393193b2c53d92899662a8b8b3c55b45cd",
+    "build_date" : "2024-03-22T03:35:46.757803203Z",
+    "build_snapshot" : false,
+    "lucene_version" : "9.10.0",
+    "minimum_wire_compatibility_version" : "7.17.0",
+    "minimum_index_compatibility_version" : "7.0.0"
+  },
+  "tagline" : "You Know, for Search"
+}
+```
 
+## Deploy Kibana
+
+1. Apply Manifest for Kibana
 ```sh
 kubectl apply -f Kibana.yaml
 ```
+2. Watch Status of Kibana
 ```sh
-kubectl get kibana -n efk
+watch "kubectl get kibana -n efk"
 ```
 ```
 NAME     HEALTH   NODES   VERSION   AGE
-kibana   green    1       8.12.2    11m
+kibana   green    1       8.13.0    11m
 ```
+- exit using `ctrl+c`
+3. validation access to kibana 
+- get service
 ```sh
 kubectl get svc kibana-kb-http -n efk
 ```
 
-https://EXTERNAL-IP:5601/
-
-username: elastic
-
-password:
+- Use kubectl port-forward to access Kibana from your local workstation:
 ```sh
-kubectl get secret elasticsearch-es-elastic-user -o=jsonpath='{.data.elastic}' -n efk | base64 --decode; echo
+kubectl port-forward service/kibana-kb-http 5601
 ```
+- access
+[localhost:5601](http://localhost:5601/)
+
+- Login as the `elastic` user. The password can be obtained with the following command:
+```sh
+kubectl get secret elasticsearch-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo
+```
+
 
 <!-- ![login](./img/SCR-20240320-kzvb.png)
 ![home](./img/SCR-20240320-ldgy.png) -->
@@ -119,7 +173,12 @@ kubectl get secret elasticsearch-es-elastic-user -o=jsonpath='{.data.elastic}' -
   <img src="img/SCR-20240320-ldgy.png" alt="home" width="45%" >
 </div>
 
-# Fluent-bit
+
+> [!TIP]
+> Use gateway or ingres for exposing kibana [here](https://github.com/elastic/cloud-on-k8s/tree/2.12/config/recipes/istio-gateway)
+
+
+## Install Fluent-bit
 
 ```sh
 helm repo add fluent https://fluent.github.io/helm-charts
