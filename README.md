@@ -152,12 +152,12 @@ kibana   green    1       8.13.0    11m
 3. validation access to kibana 
 - get service
 ```sh
-kubectl get svc kibana-kb-http -n efk
+kubectl get svc elasticsearch-kb-http -n efk
 ```
 
 - Use kubectl port-forward to access Kibana from your local workstation:
 ```sh
-kubectl port-forward service/kibana-kb-http 5601
+kubectl port-forward service/elasticsearch-kb-http 5601
 ```
 - access
 [localhost:5601](http://localhost:5601/)
