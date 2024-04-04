@@ -43,7 +43,7 @@ config:
     [OUTPUT]
         Name es
         Match kube.*
-        Host elasticsearch-es-internal-http
+        Host elasticsearch-es-http.efk
         Port 9200
         HTTP_User elastic
         HTTP_Passwd FU902mQTrK0620Kw5E5B9NTY
@@ -56,7 +56,7 @@ config:
     [OUTPUT]
         Name es
         Match host.*
-        Host elasticsearch-es-internal-http
+        Host elasticsearch-es-http.efk
         Port 9200
         HTTP_User elastic
         HTTP_Passwd FU902mQTrK0620Kw5E5B9NTY
