@@ -61,12 +61,12 @@ If you are using GKE, make sure your user has cluster-admin permissions.
 
 1. Install custom resource definitions:
 ```sh
-kubectl create -f https://download.elastic.co/downloads/eck/2.11.1/crds.yaml
+kubectl create -f https://download.elastic.co/downloads/eck/2.12.1/crds.yaml
 ```
 
 2. Install the operator with its RBAC rules:
 ```sh
-kubectl apply -f https://download.elastic.co/downloads/eck/2.11.1/operator.yaml
+kubectl apply -f https://download.elastic.co/downloads/eck/2.12.1/operator.yaml
 ```
 we can find more information regarding ECK [elastic web](https://www.elastic.co/guide/en/cloud-on-k8s/master/k8s-deploy-eck.html) and [elastic github](https://github.com/elastic/cloud-on-k8s/tree/main)
 
