@@ -150,10 +150,6 @@ kibana   green    1       8.13.0    11m
 ```
 - exit using `ctrl+c`
 3. validation access to kibana 
-- get service
-```sh
-kubectl get svc elasticsearch-kb-http -n efk
-```
 
 - Use kubectl port-forward to access Kibana from your local workstation:
 ```sh
