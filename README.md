@@ -102,6 +102,7 @@ elasticsearch   green    1       8.13.0    Ready   2m6s
 - Export password
 ```sh
 PASSWORD=$(kubectl get secret elasticsearch-es-elastic-user -o go-template='{{.data.elastic | base64decode}}')
+echo $PASSWORD
 ``` 
 - From your local workstation, use the following command in a separate terminal
 ```sh
