@@ -181,6 +181,13 @@ kubectl get secret elasticsearch-es-elastic-user -o=jsonpath='{.data.elastic}' |
 > Use gateway or ingres for exposing kibana [here](https://github.com/elastic/cloud-on-k8s/tree/2.12/config/recipes/istio-gateway)
 
 
+# add elastic agent and fleet-server
+```sh
+kubectl apply -f elastic-agent/fleet-kubernetes-integration.yaml
+```
+
+
+
 ## Install Fluent-bit
 
 ```sh
