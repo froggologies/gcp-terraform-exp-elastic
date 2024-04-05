@@ -46,12 +46,12 @@ config:
         Host elasticsearch-es-http.efk
         Port 9200
         HTTP_User elastic
-        HTTP_Passwd FU902mQTrK0620Kw5E5B9NTY
-        Index my_index
+        HTTP_Passwd changeme!!
         tls On
         tls.verify Off
         Logstash_Format On
-        Retry_Limit False
+        Retry_Limit 
+        Suppress_Type_Name On
 
     [OUTPUT]
         Name es
@@ -59,13 +59,13 @@ config:
         Host elasticsearch-es-http.efk
         Port 9200
         HTTP_User elastic
-        HTTP_Passwd FU902mQTrK0620Kw5E5B9NTY
-        Index my_index
+        HTTP_Passwd changeme!!
         tls On
         tls.verify Off
         Logstash_Format On
         Logstash_Prefix node
         Retry_Limit False
+        Suppress_Type_Name On
 
   ## https://docs.fluentbit.io/manual/pipeline/parsers
   customParsers: |
